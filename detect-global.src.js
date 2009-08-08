@@ -1,1 +1,129 @@
-javascript:%20(function(){function%20getPropertyDescriptors(object){var%20props={};for(var%20prop%20in%20object){props[prop]={type:typeof%20object[prop],value:object[prop]}}%20return%20props;}%20function%20getCleanWindow(){var%20elIframe=document.createElement('iframe');elIframe.style.display='none';document.body.appendChild(elIframe);elIframe.src='about:blank';return%20elIframe.contentWindow;}%20function%20appendControl(el,name){var%20elCheckbox=document.createElement('input');elCheckbox.type='checkbox';elCheckbox.checked=true;elCheckbox.id='__'+name;var%20elLabel=document.createElement('label');elLabel.htmlFor='__'+name;elLabel.innerHTML='Exclude%20'+name+'%20properties?';elLabel.style.marginLeft='0.5em';var%20elWrapper=document.createElement('p');elWrapper.style.marginBottom='0.5em';elWrapper.appendChild(elCheckbox);elWrapper.appendChild(elLabel);el.appendChild(elWrapper);}%20function%20appendAnalyze(el){var%20elAnalyze=document.createElement('button');elAnalyze.id='__analyze';elAnalyze.innerHTML='Analyze';elAnalyze.style.marginTop='1em';el.appendChild(elAnalyze);}%20function%20appendCancel(el){var%20elCancel=document.createElement('a');elCancel.href='#';elCancel.innerHTML='Cancel';elCancel.style.cssText='color:#eee;margin-left:0.5em;';elCancel.onclick=function(){el.parentNode.removeChild(el);return%20false;};el.appendChild(elCancel);}%20function%20initConfigPopup(){var%20el=document.createElement('div');el.style.cssText='position:fixed;%20left:10px;%20top:10px;%20width:300px;%20background:rgba(50,50,50,0.9);'+'-moz-border-radius:10px;%20padding:1em;%20color:%20#eee;%20text-align:%20left;'+'font-family:%20"Helvetica%20Neue",%20Verdana,%20Arial,%20sans%20serif;%20z-index:%2099999;';for(var%20prop%20in%20propSets){appendControl(el,prop);}%20appendAnalyze(el);appendCancel(el);document.body.appendChild(el);}%20function%20getPropsCount(object){var%20count=0;for(var%20prop%20in%20object){count++;}%20return%20count;}%20function%20shouldDeleteProperty(propToCheck){for(var%20prop%20in%20propSets){var%20elCheckbox=document.getElementById('__'+prop);var%20isPropInSet=propSets[prop].indexOf(propToCheck)>-1;if(elCheckbox.checked&&isPropInSet){return%20true;}}}%20function%20analyze(){var%20global=(function(){return%20this;})(),globalProps=getPropertyDescriptors(global),cleanWindow=getCleanWindow();for(var%20prop%20in%20cleanWindow){if(globalProps[prop]){delete%20globalProps[prop];}}%20for(var%20prop%20in%20globalProps){if(shouldDeleteProperty(prop)){delete%20globalProps[prop];}}%20console.dir(globalProps);console.log('Total%20amount%20of%20properties:%20'+getPropsCount(globalProps));}%20var%20propSets={'Prototype':'$$%20$A%20$F%20$H%20$R%20$break%20$continue%20$w%20Abstract%20Ajax%20Class%20Enumerable%20Element%20Field%20Form%20'+'Hash%20Insertion%20ObjectRange%20PeriodicalExecuter%20Position%20Prototype%20Selector%20Template%20Toggle%20Try'.split('%20'),'Scriptaculous':'Autocompleter%20Builder%20Control%20Draggable%20Draggables%20Droppables%20Effect%20Sortable%20SortableObserver%20Sound%20Scriptaculous'.split('%20'),'Firebug':'loadFirebugConsole%20console%20_getFirebugConsoleElement%20_FirebugConsole%20_FirebugCommandLine%20_firebug'.split('%20'),'Mozilla':'Components%20XPCNativeWrapper%20XPCSafeJSObjectWrapper%20getInterface%20netscape%20GetWeakReference'.split('%20'),'GoogleAnalytics':'gaJsHost%20gaGlobal%20_gat%20pageTracker'.split('%20')};initConfigPopup();document.getElementById('__analyze').onclick=analyze;})();
+(function () {
+    function getPropertyDescriptors(object) {
+      var props = { };
+      for (var prop in object) {
+        props[prop] = {
+          type: typeof object[prop],
+          value: object[prop]
+        }
+      }
+      return props;
+    }
+    
+    function getCleanWindow() {
+      var elIframe = document.createElement('iframe');
+      elIframe.style.display = 'none';
+      document.body.appendChild(elIframe);
+      elIframe.src = 'about:blank';
+      return elIframe.contentWindow;
+    }
+    
+    function appendControl(el, name) {
+      var elCheckbox = document.createElement('input');
+      elCheckbox.type = 'checkbox';
+      elCheckbox.checked = true;
+      elCheckbox.id = '__' + name;
+      
+      var elLabel = document.createElement('label');
+      elLabel.htmlFor = '__' + name;
+      elLabel.innerHTML = 'Exclude ' + name + ' properties?';
+      elLabel.style.marginLeft = '0.5em';
+      
+      var elWrapper = document.createElement('p');
+      elWrapper.style.marginBottom = '0.5em';
+      
+      elWrapper.appendChild(elCheckbox);
+      elWrapper.appendChild(elLabel);
+
+      el.appendChild(elWrapper);
+    }
+    
+    function appendAnalyze(el) {
+      var elAnalyze = document.createElement('button');
+      elAnalyze.id = '__analyze';
+      elAnalyze.innerHTML = 'Analyze';
+      elAnalyze.style.marginTop = '1em';
+      el.appendChild(elAnalyze);
+    }
+    
+    function appendCancel(el) {
+      var elCancel = document.createElement('a');
+      elCancel.href = '#';
+      elCancel.innerHTML = 'Cancel';
+      elCancel.style.cssText = 'color:#eee;margin-left:0.5em;';
+      elCancel.onclick = function() {
+        el.parentNode.removeChild(el);
+        return false; 
+      };
+      el.appendChild(elCancel);
+    }
+    
+    function initConfigPopup() {
+      var el = document.createElement('div');
+      
+      el.style.cssText =  'position:fixed; left:10px; top:10px; width:300px; background:rgba(50,50,50,0.9);' +
+                          '-moz-border-radius:10px; padding:1em; color: #eee; text-align: left;' +
+                          'font-family: "Helvetica Neue", Verdana, Arial, sans serif; z-index: 99999;';
+      
+      for (var prop in propSets) {
+        appendControl(el, prop);
+      }
+      
+      appendAnalyze(el);
+      appendCancel(el);
+      
+      document.body.appendChild(el);
+    }
+    
+    function getPropsCount(object) {
+      var count = 0;
+      for (var prop in object) {
+        count++;
+      }
+      return count;
+    }
+    
+    function shouldDeleteProperty(propToCheck) {
+      for (var prop in propSets) {
+        var elCheckbox = document.getElementById('__' + prop);
+        var isPropInSet = propSets[prop].indexOf(propToCheck) > -1;
+        if (elCheckbox.checked && isPropInSet) {
+          return true;
+        }
+      }
+    }
+    
+    function analyze() {
+      var global = (function(){ return this; })(),
+          globalProps = getPropertyDescriptors(global),
+          cleanWindow = getCleanWindow();
+          
+      for (var prop in cleanWindow) {
+        if (globalProps[prop]) {
+          delete globalProps[prop];
+        }
+      }
+      for (var prop in globalProps) {
+        if (shouldDeleteProperty(prop)) {
+          delete globalProps[prop];
+        }
+      }
+      
+      console.dir(globalProps);
+      console.log('Total amount of properties: ' + getPropsCount(globalProps));
+    }
+    
+    var propSets = {
+      'Prototype':        '$$ $A $F $H $R $break $continue $w Abstract Ajax Class Enumerable Element Field Form ' +
+                          'Hash Insertion ObjectRange PeriodicalExecuter Position Prototype Selector Template Toggle Try'.split(' '),
+                        
+      'Scriptaculous':    'Autocompleter Builder Control Draggable Draggables Droppables Effect Sortable SortableObserver Sound Scriptaculous'.split(' '),
+      'Firebug':          'loadFirebugConsole console _getFirebugConsoleElement _FirebugConsole _FirebugCommandLine _firebug'.split(' '),
+      'Mozilla':          'Components XPCNativeWrapper XPCSafeJSObjectWrapper getInterface netscape GetWeakReference'.split(' '),
+      'GoogleAnalytics':  'gaJsHost gaGlobal _gat pageTracker'.split(' ')
+    };
+    
+    initConfigPopup();
+    
+    document.getElementById('__analyze').onclick = analyze;
+})();
