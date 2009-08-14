@@ -110,7 +110,7 @@
       }
       
       console.dir(globalProps);
-      console.log('Total amount of properties: ' + getPropsCount(globalProps));
+      console.log('Total number of properties: ' + getPropsCount(globalProps));
     }
     
     var propSets = {
