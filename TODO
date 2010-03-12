@@ -1,0 +1,2 @@
+Add option to filter event handlers on `window` - onload, onerror, onresize, etc.
+Use less obtrusive id's on elements (?)
